@@ -1,0 +1,69 @@
+---
+- name: Create an EC2 instance and open ports 22 and HTTP
+  hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    region: us-east-1
+    image: ami-0c94855ba95c71c99
+    instance_type: t2.micro
+    security_group: my-sg
+
+  tasks:
+    - name: Create a security group
+      ec2_group:
+        name: "{{ security_group }}"
+        description: "Security group for my EC2 instance"
+        region: "{{ region }}"
+        rules:
+          - proto: tcp
+            from_port: 22
+            to_port: 22
+            cidr_ip: 0.0.0.0/0
+          - proto: tcp
+            from_port: 80
+            to_port: 80
+            cidr_ip: 0.0.0.0/0
+
+    - name: Launch an EC2 instance
+      ec2:
+        key_name: my-key
+        group_id: "{{ security_group }}"
+        instance_type: "{{ instance_type }}"
+        image: "{{ image }}"
+        wait: yes
+        region: "{{ region }}"
+        count: 1
+        instance_tags:
+          Name: my-instance
+
+    - name: Add newly created EC2 instance to host group
+      add_host:
+        name: "{{ item.public_ip }}"
+        groups: launched
+      with_items: "{{ ec2.instances }}"
+
+    - name: Wait for SSH to come up
+      wait_for:
+        host: "{{ item.public_ip }}"
+        port: 22
+        delay: 10
+        timeout: 320
+        state: started
+      with_items: "{{ ec2.instances }}"
+
+    - name: Install Apache2
+      become: true
+      become_user: ubuntu
+      apt:
+        name: apache2
+        update_cache: yes
+
+    - name: Start Apache2 and enable on boot
+      become: true
+      become_user: ubuntu
+      service:
+        name: apache2
+        state: started
+        enabled: true
