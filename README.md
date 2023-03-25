@@ -20,7 +20,7 @@ To use this playbook:
         image: The ID of the Amazon Machine Image (AMI) to use for the instance.
         instance_type: The type of instance to launch (e.g., t2.micro).
         security_group: The name of the security group to create and use for the instance.
-    Ensure that you have an SSH key pair named my-key in the AWS region where you will be launching the instance. You can create a new key pair in the AWS Console if necessary.
+    Ensure that you have an SSH key pair named "desired value" in the AWS region where you will be launching the instance. You can create a new key pair in the AWS Console if necessary.
     Run the playbook with the following command:
 
 
