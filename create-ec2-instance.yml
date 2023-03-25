@@ -6,10 +6,9 @@
 
   vars:
     region: us-east-1
-    image: ami-0263e4deb427da90e
+    image: ami-0557a15b87f6559cf
     instance_type: t2.micro
-    id: "new"
-    sec_group: "{{ id }}-sec"
+    sec_group: "sec"
 
   tasks:
     - name: Create a security group
@@ -56,14 +55,14 @@
 
     - name: Install Apache2
       become: true
-      become_user: ubuntu
+      become_user: sudo
       apt:
         name: apache2
         update_cache: yes
 
     - name: Start Apache2 and enable on boot
       become: true
-      become_user: ubuntu
+      become_user: sudo
       service:
         name: apache2
         state: started
