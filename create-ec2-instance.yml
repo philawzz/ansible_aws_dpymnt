@@ -28,7 +28,7 @@
 
     - name: Launch an EC2 instance
       ec2:
-        key_name: my-key
+        key_name: test-key
         group_id: "{{ sec_group }}"
         instance_type: "{{ instance_type }}"
         image: "{{ image }}"
