@@ -23,7 +23,6 @@ To use this playbook:
     Ensure that you have an SSH key pair named my-key in the AWS region where you will be launching the instance. You can create a new key pair in the AWS Console if necessary.
     Run the playbook with the following command:
 
-lua
 
 ansible-playbook create-ec2-instance.yml
 
