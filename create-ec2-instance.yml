@@ -6,14 +6,15 @@
 
   vars:
     region: us-east-1
-    image: ami-0c94855ba95c71c99
+    image: ami-0263e4deb427da90e
     instance_type: t2.micro
-    security_group: my-sg
+    id: "new"
+    sec_group: "{{ id }}-sec"
 
   tasks:
     - name: Create a security group
       ec2_group:
-        name: "{{ security_group }}"
+        name: "{{ sec_group }}"
         description: "Security group for my EC2 instance"
         region: "{{ region }}"
         rules:
@@ -29,7 +30,7 @@
     - name: Launch an EC2 instance
       ec2:
         key_name: my-key
-        group_id: "{{ security_group }}"
+        group_id: "{{ sec_group }}"
         instance_type: "{{ instance_type }}"
         image: "{{ image }}"
         wait: yes
@@ -67,4 +68,3 @@
         name: apache2
         state: started
         enabled: true
-        
