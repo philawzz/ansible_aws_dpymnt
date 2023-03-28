@@ -5,17 +5,17 @@
   gather_facts: False
 
   vars:
-    region: us-east-1
-    image: ami-0557a15b87f6559cf
-    instance_type: t2.micro
-    sec_group: "sec"
+    my_region: eu-west-2
+    my_image: ami-0ad97c80f2dfe623b
+    my_instance_type: t2.micro
+    my_sec_group: "sec"
 
   tasks:
     - name: Create a security group
       ec2_group:
-        name: "{{ sec_group }}"
+        name: "{{ var.my_sec_group }}"
         description: "Security group for my EC2 instance"
-        region: "{{ region }}"
+        region: "{{ var.my_region }}"
         rules:
           - proto: tcp
             from_port: 22
@@ -28,12 +28,12 @@
 
     - name: Launch an EC2 instance
       ec2:
-        key_name: test-key
-        group_id: "{{ sec_group }}"
-        instance_type: "{{ instance_type }}"
-        image: "{{ image }}"
+        key_name: "London02"
+        group_id: "{{ var.sec_group.id }}"
+        instance_type: "{{ var.my_instance_type }}"
+        image: "{{ var.my_image }}"
         wait: yes
-        region: "{{ region }}"
+        region: "{{ var.my_region }}"
         count: 1
         instance_tags:
           Name: my-instance
